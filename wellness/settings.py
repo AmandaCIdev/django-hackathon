@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 if os.path. isfile('env.py'):
     import env
@@ -27,7 +28,8 @@ TEMPLATES_DIR = BASE_DIR / 'templates'
 SECRET_KEY = 'django-insecure-9elds$!4yptd4k(9w2gra6)w8=%vv*b@mu89b8nx#u3)r8np12'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if "DEBUG" in os.environ else False
+DEBUG = "DEBUG" in os.environ 
+
 
 ALLOWED_HOSTS = ['.gitpod.io', '.heroku.com']
 CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io','https://*.heroku.com']
@@ -88,13 +90,18 @@ WSGI_APPLICATION = 'wellness.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+if "DEBUG" in os.environ:
+    DATABASES = {
+
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+else:
+   DATABASES = {
+       'default': dj_database_url.parse(os.environ.get('DB_URL'))
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
